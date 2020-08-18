@@ -5,19 +5,17 @@ bin
 .metadata
 .classpath
 .project
-
 # idea
 out
 *.ipr
 *.iws
 *.iml
 .idea
-
 # gradle
 build
 .gradle
 /classes
-
 # other
 eclipse
 run
+/local.properties
