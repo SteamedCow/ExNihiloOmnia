@@ -23,7 +23,8 @@ class ItemStone : ItemBase(LibItems.SMALL_STONE) {
 
         if (!worldIn.isRemote) {
             val thrownStone = EntityThrownStone(worldIn, playerIn)
-            thrownStone.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0f, 1.5f, 1.0f)
+            // TODO("Test if necessary to set heading")
+//            thrownStone.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0f, 1.5f, 1.0f)
             worldIn.spawnEntity(thrownStone)
         }
 

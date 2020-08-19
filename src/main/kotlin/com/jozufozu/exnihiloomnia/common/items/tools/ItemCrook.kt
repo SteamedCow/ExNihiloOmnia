@@ -33,7 +33,7 @@ class ItemCrook(registryName: ResourceLocation, toolMaterial: ToolMaterial) : It
         return blockIn.material === Material.LEAVES
     }
 
-    override fun getStrVsBlock(stack: ItemStack, state: IBlockState): Float {
-        return if (state.material === Material.LEAVES) this.efficiencyOnProperMaterial else super.getStrVsBlock(stack, state)
-    }
+//    override fun getStrVsBlock(stack: ItemStack, state: IBlockState): Float {
+//        return if (state.material === Material.LEAVES) this.efficiencyOnProperMaterial else super.getStrVsBlock(stack, state)
+//    }
 }

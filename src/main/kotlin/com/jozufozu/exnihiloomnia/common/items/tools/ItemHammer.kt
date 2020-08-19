@@ -31,9 +31,9 @@ class ItemHammer(registryName: ResourceLocation, toolMaterial: ToolMaterial) : I
         return if (RegistryManager.hammerable(blockState!!)) this.toolMaterial.harvestLevel else -1
     }
 
-    override fun getStrVsBlock(stack: ItemStack, state: IBlockState): Float {
-        return if (RegistryManager.hammerable(state)) this.efficiencyOnProperMaterial else super.getStrVsBlock(stack, state)
-    }
+//    override fun getStrVsBlock(stack: ItemStack, state: IBlockState): Float {
+//        return if (RegistryManager.hammerable(state)) this.efficiencyOnProperMaterial else super.getStrVsBlock(stack, state)
+//    }
 
     override fun canDisableShield(stack: ItemStack, shield: ItemStack, entity: EntityLivingBase, attacker: EntityLivingBase): Boolean {
         return true
