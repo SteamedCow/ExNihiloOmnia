@@ -61,10 +61,10 @@ class UseSieveTrigger : ICriterionTrigger<UseSieveTrigger.Instance> {
     class Instance(private val recipe: ResourceLocation?, private val drops: Array<ItemPredicate>?) : AbstractCriterionInstance(ID) {
 
         fun test(recipeName: ResourceLocation, drops: NonNullList<ItemStack>): Boolean {
-            val list = Lists.newArrayList(*this.drops ?: arrayOfNulls(0))
+            val list = arrayListOf(*this.drops ?: arrayOfNulls(0))
 
             for (drop in drops) {
-                list.removeIf { itemPredicate -> itemPredicate.test(drop) }
+                list.removeIf { itemPredicate -> itemPredicate?.test(drop) == true }
             }
 
             return list.isEmpty() && this.recipe == null || recipeName == this.recipe
