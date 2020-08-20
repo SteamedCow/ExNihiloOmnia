@@ -1,102 +1,167 @@
 buildscript {
     repositories {
         jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
+        mavenCentral()
+        maven { url = "https://files.minecraftforge.net/maven" }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.0'
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.2.6"
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'kotlin'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+
+version = "0.0.1"
 group= "jozufozu" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "exnihiloomnia"
-
-sourceCompatibility = targetCompatibility = "1.8"
-compileJava {
-    sourceCompatibility = targetCompatibility = "1.8"
-}
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = compileKotlin.kotlinOptions.jvmTarget = compileTestKotlin.kotlinOptions.jvmTarget = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    version = "${mc_version}-${forge_version}"
-    runDir = "run"
+    setVersion(project.mc_version + "-" + project.forge_version)
 
-    mappings = "snapshot_20161111"
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    mappings channel: 'snapshot', version: '20171003-1.12'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+        }
+
+        server {
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+        }
+    }
 }
 
 repositories {
+    jcenter()
     maven {
-        name "Mobius Repo"
-        url "http://mobiusstrip.eu/maven"
+        name = "Mobius Repo"
+        url = "https://mobiusstrip.eu/maven"
+    }
+
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
     }
     maven {
-        name 'DVS1 Maven FS'
-        url 'http://dvs1.progwml6.com/files/maven'
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+
+    maven { // TOP
+        name = 'tterrag maven'
+        url = "https://maven.tterrag.com/"
+    }
+
+    maven {
+        name = "CoFH Maven"
+        url = "https://maven.covers1624.net"
+    }
+
+    maven { //Albedo
+        url = 'https://repo.elytradev.com/'
+    }
+
+    maven {
+        url = "https://maven.shadowfacts.net/"
+    }
+
+    maven {
+        name = 'Forestry'
+        url = "http://maven.ic2.player.to/"
     }
     maven {
-        name 'tterrag maven'
-        url "http://maven.tterrag.com/"
+        url = "http://maven.cil.li/"
     }
     maven {
-        name 'Forestry'
-        url "http://maven.ic2.player.to/"
+        url = "http://maven.ic2.player.to"
     }
-    maven {
-        url "http://maven.cil.li/"
-    }
-    maven {
-        url "http://maven.ic2.player.to"
-    }
-    maven {
-        url "http://maven.epoxide.xyz"
-    }
-    maven {
-        url "http://dl.tsr.me/artifactory/libs-release-local"
-    }
-    maven {
-        url "http://maven.chaosfield.at/"
-    }
+//    maven {
+//        url = "http://dl.tsr.me/artifactory/libs-release-local"
+//    }
+//    maven { // Quark and ARL
+//        name = "BlameJared"
+//        url = "https://maven.blamejared.com"
+//    }
     ivy {
-        url "http://ae-mod.info/builds"
-        layout "pattern", {
-            artifact "[module]-[revision](-[classifier])(.[ext])"
-        }
+        url "https://ae-mod.info/builds"
+        layout("pattern", {
+            artifacts {
+                "[module]-[revision](-[classifier])(.[ext])"
+            }
+        })
     }
 }
 
 dependencies {
-    deobfCompile "mcjty.theoneprobe:TheOneProbe:${top_version}"
-    deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}"
-    deobfCompile "mcp.mobius.waila:Waila:1.7.0-B3_1.9.4"
-    deobfCompile "slimeknights.mantle:Mantle:${mc_version}-${mantle_version}"
-    deobfCompile "slimeknights:TConstruct:${mc_version}-${tcon_version}"
-    deobfCompile "net.sengir.forestry:forestry_${mc_version}:${forestry_version}"
-    deobfCompile"com.enderio.core:EnderCore:${mc_version}-${endercore_version}"
-    deobfCompile "com.enderio:EnderIO:${mc_version}-${enderio_version}"
-    deobfCompile "de.ellpeck.actuallyadditions:ActuallyAdditions:${mc_version}-${aa_version}"
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2854'
+    compile group: "net.shadowfacts", name: "Forgelin", version: "1.8.4"
+
+    compileOnly fg.deobf("mezz.jei:jei_${mc_version}:${jei_version}:api")
+    runtimeOnly fg.deobf("mezz.jei:jei_${mc_version}:${jei_version}")
+//    deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"
+//    runtimeOnly "mezz.jei:jei_${mc_version}:${jei_version}"
+
+    compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-1.12:1.12-${top_version}:api")
+    runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-1.12:1.12-${top_version}")
+
+    //1.7.1_1.11.2
+    compileOnly fg.deobf("mcp.mobius.waila:Waila:1.7.0-B3_1.9.4")
+    compileOnly fg.deobf("slimeknights.mantle:Mantle:1.12-${mantle_version}")
+    compileOnly fg.deobf("slimeknights:TConstruct:${mc_version}-${tcon_version}")
+    compileOnly fg.deobf("net.sengir.forestry:forestry_${mc_version}:${forestry_version}")
+//    compileOnly fg.deobf("com.enderio.core:EnderCore:${mc_version}-${endercore_version}")
+//    compileOnly fg.deobf("com.enderio:EnderIO:${mc_version}-${enderio_version}")
+    compileOnly fg.deobf("de.ellpeck.actuallyadditions:ActuallyAdditions:${mc_version}-${aa_version}")
+
+//    deobfProvided "TechReborn:TechReborn-${mc_version}:${TR_version}:api" - 2.13.2.561
+    // compileOnly fg.deobf('elucent:albedo:2.0-SNAPSHOT')
 }
 
-processResources
-{
+processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
     }
         
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+jar {
+    archiveName = baseName + "_" + project.mc_version + "-" + project.version  + "." + extension
+
+    exclude "**/*.bat"
+    exclude "**/*.psd"
+    exclude "**/*.exe"
+}
+
+task srcJar(type: Jar) {
+    from sourceSets.main.allSource
+    archiveName = baseName + "_" + project.mc_version + "-" + project.version  + "-sources." + extension
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    archiveName = baseName + "_" + project.mc_version + "-" + project.version  + "-deobf." + extension
+}
+
+// Tell the artifact system about our extra jars
+artifacts {
+    archives srcJar, deobfJar
 }
