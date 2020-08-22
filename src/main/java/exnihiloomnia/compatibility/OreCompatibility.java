@@ -48,7 +48,7 @@ public class OreCompatibility {
     }
 
     public static void addMekanismCompatibility(ItemStack input, ItemStack output) {
-        output.stackSize = 6;
+        output.setCount(6);
 
         NBTTagCompound msg = new NBTTagCompound();
         msg.setTag("input", input.writeToNBT(new NBTTagCompound()));

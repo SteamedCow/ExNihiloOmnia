@@ -50,13 +50,13 @@ public class TileEntityCrucible extends TileEntity implements ITickable{
             if (meltable != null) {
                 if (canInsertItem(stack)) {
                     if (hasSpaceFor(meltable.getSolidVolume())) {
-                        stack.stackSize--;
+                        stack.setCount(stack.getCount() - 1);
 
                         item = stack.copy();
                         addSolid(meltable.getSolidVolume());
                         sync();
 
-                        return stack.stackSize == 0 ? null : stack;
+                        return stack.getCount() == 0 ? null : stack;
                     }
                 }
             }
@@ -290,7 +290,7 @@ public class TileEntityCrucible extends TileEntity implements ITickable{
         if (items.tagCount() > 0)
         {
             NBTTagCompound item = items.getCompoundTagAt(0);
-            this.item = ItemStack.loadItemStackFromNBT(item);
+            this.item = new ItemStack(item);
         }
 	}
 

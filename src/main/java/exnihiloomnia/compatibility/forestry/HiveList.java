@@ -8,7 +8,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.BiomeDictionary;
 
 public class HiveList {
-
     public static final Block beehives = PluginApiculture.blocks.beehives;
 
     public static Hive FOREST;

@@ -19,10 +19,10 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 
 public class BlockCrucible extends Block implements ITileEntityProvider {
 
@@ -39,23 +39,25 @@ public class BlockCrucible extends Block implements ITileEntityProvider {
 	public boolean canCreatureSpawn(IBlockState state, IBlockAccess world, BlockPos pos, net.minecraft.entity.EntityLiving.SpawnPlacementType type) {
 		return false;
 	}
-	
+
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntityCrucible crucible = (TileEntityCrucible) world.getTileEntity(pos);
+		ItemStack item = player.getHeldItem(hand);
+		FluidBucketWrapper fluidWrapper = new FluidBucketWrapper(item);
 
 		if (item != null && crucible != null) {
 			if (item.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-				FluidUtil.interactWithFluidHandler(item, crucible.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), player);
-			}
-			else if (FluidContainerRegistry.isEmptyContainer(item) ) {
-				ItemStack full = FluidContainerRegistry.fillFluidContainer(crucible.getFluid(), item);
+				FluidUtil.interactWithFluidHandler(player, hand, crucible.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null));
+			} else if (fluidWrapper.getContainer().isEmpty()) {
+				ItemStack full = fluidWrapper.getContainer();
 
 				if (full != null) {
 					if (player != null) {
 						if (!player.capabilities.isCreativeMode) {
-							if (item.stackSize > 1) {
-								item.stackSize--;
+							int stackSize = item.getCount();
+							if (stackSize > 1) {
+								item.setCount(stackSize - 1);
 								InventoryHelper.giveItemStackToPlayer(player, full);
 							}
 							else {
@@ -70,7 +72,7 @@ public class BlockCrucible extends Block implements ITileEntityProvider {
 			}
 
 			ItemStack contents = item.copy();
-			contents.stackSize = 1;
+			contents.setCount(1);
 
 			if (crucible.canInsertItem(contents)) {
 				crucible.getItemHandler().insertItem(0, contents, false);

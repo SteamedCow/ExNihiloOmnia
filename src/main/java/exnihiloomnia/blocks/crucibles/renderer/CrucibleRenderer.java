@@ -7,6 +7,7 @@ import exnihiloomnia.util.Color;
 import exnihiloomnia.util.helpers.ContentRenderHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
@@ -22,9 +23,9 @@ public class CrucibleRenderer extends TileEntitySpecialRenderer<TileEntityCrucib
 	public static final double MIN_RENDER_CAPACITY = 0.30d;
 	public static final double MAX_RENDER_CAPACITY = 0.95d;
 	public static EntityLivingBase entity;
-	
+
 	@Override
-	public void renderTileEntityAt(TileEntityCrucible crucible, double x, double y, double z, float partialTicks, int destroyStage) {
+	public void renderTileEntityFast(TileEntityCrucible crucible, double x, double y, double z, float partialTicks, int destroyStage, float partial, BufferBuilder buffer) {
 		GlStateManager.pushMatrix();
 		RenderHelper.disableStandardItemLighting();
 

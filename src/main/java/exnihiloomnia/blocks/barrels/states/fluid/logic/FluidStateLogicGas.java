@@ -3,6 +3,7 @@ package exnihiloomnia.blocks.barrels.states.fluid.logic;
 import exnihiloomnia.blocks.barrels.architecture.BarrelLogic;
 import exnihiloomnia.blocks.barrels.tileentity.TileEntityBarrel;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -21,10 +22,11 @@ public class FluidStateLogicGas extends BarrelLogic {
 				
 				if(world.isAirBlock(above)) {
 					//float free little cloud dude!
-					Block fblock = barrel.getFluid().getFluid().getBlock();
-					
-					world.setBlockState(above, fblock.getDefaultState(), 3);
-					world.notifyBlockOfStateChange(above, fblock);
+					Block fBlock = barrel.getFluid().getFluid().getBlock();
+					IBlockState state = fBlock.getBlockState().getBaseState();
+
+					world.setBlockState(above, fBlock.getDefaultState(), 3);
+					world.notifyBlockUpdate(above, state, state, 2);
 					
 					barrel.getFluidTank().drain(barrel.getFluidTank().getCapacity(), true);
 					

@@ -26,7 +26,7 @@ public class EndStateLogic extends BarrelLogic {
 				EntityEnderman blaze = new EntityEnderman(world);
 				blaze.setPositionAndRotation(pos.getX() + 0.5d, pos.getY() + 1.25d, pos.getZ() + 0.5d, world.rand.nextFloat() * 360f, 0.0f);
 
-				barrel.getWorld().spawnEntityInWorld(blaze);
+				barrel.getWorld().spawnEntity(blaze);
 			}
 
 			barrel.setState(BarrelStates.EMPTY);

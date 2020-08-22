@@ -2,10 +2,10 @@ package exnihiloomnia.util.helpers;
 
 import exnihiloomnia.util.Color;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
@@ -29,7 +29,7 @@ public class ContentRenderHelper {
 		double maxV = (double)texture.getMaxV();
 		
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer renderer = tessellator.getBuffer();
+		BufferBuilder renderer = tessellator.getBuffer();
 		GlStateManager.color(color.r, color.g, color.b, color.a);
 
 		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -53,7 +53,7 @@ public class ContentRenderHelper {
 				maxV = (double)texture.getMaxV();
 
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer renderer = tessellator.getBuffer();
+		BufferBuilder renderer = tessellator.getBuffer();
 		GlStateManager.color(color.r, color.g, color.b, color.a);
 
 		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

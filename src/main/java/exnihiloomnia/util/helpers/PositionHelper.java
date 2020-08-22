@@ -95,7 +95,7 @@ public class PositionHelper {
 	}
 	
 	public static boolean getChunkContainsPoint(Chunk chunk, int x, int z) {
-    	return (x >> 4 == chunk.xPosition && z >> 4 == chunk.zPosition);
+    	return (x >> 4 == chunk.x && z >> 4 == chunk.z);
 	}
 	
 	public static void setBlockStateWithoutReplace(World world, BlockPos pos, IBlockState state) {

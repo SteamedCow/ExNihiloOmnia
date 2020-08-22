@@ -1,35 +1,35 @@
 package exnihiloomnia.crafting.recipes;
 
+import exnihiloomnia.ENO;
 import exnihiloomnia.items.ENOItems;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class DollRecipes {
-	
 	public static void register() {
+		ResourceLocation group = new ResourceLocation(ENO.MODID);
+
 		//Dolls
-		GameRegistry.addRecipe(
-				new ShapedOreRecipe(
+		GameRegistry.addShapedRecipe(ENOItems.PORCELAIN_DOLL.getRegistryName(), group,
 						new ItemStack(ENOItems.PORCELAIN_DOLL, 1),
                         "xdx",
                         " x ",
                         "x x",
                         'x', ENOItems.PORCELAIN,
-                        'd', "gemDiamond"));
+                        'd', "gemDiamond");
 
-        GameRegistry.addRecipe(
-                new ShapedOreRecipe(
+        GameRegistry.addShapedRecipe(ENOItems.PORCELAIN_DOLL.getRegistryName(), group,
                         new ItemStack(ENOItems.PORCELAIN_DOLL, 1),
                         "xdx",
                         " x ",
                         "x x",
                         'x', ENOItems.PORCELAIN,
-                        'd', "gemEmerald"));
+                        'd', "gemEmerald");
 
-		GameRegistry.addRecipe(
-				new ShapedOreRecipe(
+		GameRegistry.addShapedRecipe(ENOItems.BLAZE_DOLL.getRegistryName(), group,
 						new ItemStack(ENOItems.BLAZE_DOLL, 1),
                         "bwb",
                         "gdg",
@@ -38,10 +38,9 @@ public class DollRecipes {
                         'b', Items.BLAZE_POWDER,
                         'w', Items.NETHER_WART,
 						'g', "dustGlowstone",
-						'r', "dustRedstone"));
+						'r', "dustRedstone");
 
-		GameRegistry.addRecipe(
-				new ShapedOreRecipe(
+		GameRegistry.addShapedRecipe(ENOItems.END_DOLL.getRegistryName(), group,
 						new ItemStack(ENOItems.END_DOLL, 1),
 						"bwb",
 						"gdg",
@@ -50,6 +49,6 @@ public class DollRecipes {
 						'b', "dyeBlack",
 						'w', Items.NETHER_WART,
 						'g', new ItemStack(Items.DYE, 1, 4),
-						'r', "dustRedstone"));
+						'r', "dustRedstone");
 	}
 }

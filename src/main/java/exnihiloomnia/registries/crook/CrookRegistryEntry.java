@@ -102,7 +102,7 @@ public class CrookRegistryEntry {
 		ArrayList<CrookRecipeReward> rewards = new ArrayList<>();
 
 		for (CrookReward reward : this.getRewards())
-			rewards.add(new CrookRecipeReward(Item.REGISTRY.getNameForObject(reward.getItem().getItem()).toString(), reward.getItem().getMetadata(), reward.getItem().stackSize, reward.getBaseChance(), reward.getFortuneModifier()));
+			rewards.add(new CrookRecipeReward(Item.REGISTRY.getNameForObject(reward.getItem().getItem()).toString(), reward.getItem().getMetadata(), reward.getItem().getCount(), reward.getBaseChance(), reward.getFortuneModifier()));
 
 		recipe.setRewards(rewards);
 

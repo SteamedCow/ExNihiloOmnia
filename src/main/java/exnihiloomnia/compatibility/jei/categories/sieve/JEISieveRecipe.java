@@ -63,26 +63,6 @@ public class JEISieveRecipe implements IRecipeWrapper{
         return rewards.get(stack);
     }
 
-    @Override
-    public List getInputs() {
-        return inputs;
-    }
-
-    @Override
-    public List getOutputs() {
-        return outputs;
-    }
-
-    @Override
-    public List<FluidStack> getFluidInputs() {
-        return null;
-    }
-
-    @Override
-    public List<FluidStack> getFluidOutputs() {
-        return null;
-    }
-
     @Nullable
     @Override
     public List<String> getTooltipStrings(int mouseX, int mouseY) {
@@ -90,14 +70,7 @@ public class JEISieveRecipe implements IRecipeWrapper{
     }
 
     @Override
-    public void drawAnimations(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight) {
-
-    }
-
-    @Override
-    public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-
-    }
+    public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) { }
 
     @Override
     public boolean handleClick(@Nonnull Minecraft minecraft, int mouseX, int mouseY, int mouseButton) {

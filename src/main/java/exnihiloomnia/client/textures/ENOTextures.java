@@ -72,7 +72,7 @@ public class ENOTextures {
     @SuppressWarnings("unchecked")
     private static void forceTextureRegistration(TextureMap map, TextureAtlasSprite sprite) {
 
-        if (!map.setTextureEntry(sprite.getIconName(), sprite)) {
+        if (!map.setTextureEntry(sprite)) {
             ENO.log.debug("Failed to register texture: " + sprite.getIconName());
             try {
                 Field f;

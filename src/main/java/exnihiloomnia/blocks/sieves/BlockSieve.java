@@ -53,7 +53,9 @@ public class BlockSieve extends Block implements ITileEntityProvider {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		ItemStack item = player.getHeldItem(hand);
+
 		if (player == null) {
 			return false;
 		}
@@ -94,7 +96,7 @@ public class BlockSieve extends Block implements ITileEntityProvider {
 						if (block != null) {
 							if (sieve.getContents() == null && SieveRegistry.isSiftable(block.getStateFromMeta(item.getMetadata()))) {
 								ItemStack contents = item.copy();
-								contents.stackSize = 1;
+								contents.setCount(1);
 
 								world.playSound(null, pos, SoundEvents.BLOCK_GRAVEL_STEP, SoundCategory.BLOCKS, 0.5f, 1.0f);
 
@@ -107,7 +109,7 @@ public class BlockSieve extends Block implements ITileEntityProvider {
 				else {
 					if (item != null && item.getItem() instanceof ISieveMesh) {
 						ItemStack mesh = item.copy();
-						mesh.stackSize = 1;
+						mesh.setCount(1);
 						
 						sieve.setMesh(mesh);
 						InventoryHelper.consumeItem(player, item);

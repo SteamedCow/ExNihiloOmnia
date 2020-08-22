@@ -7,9 +7,9 @@ import exnihiloomnia.world.generation.templates.pojos.Template;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.gen.ChunkProviderOverworld;
+import net.minecraft.world.gen.IChunkGenerator;
 
-public class ChunkProviderVoidSurface extends ChunkProviderOverworld {
+public class ChunkProviderVoidSurface implements IChunkGenerator {
 	private final World world;
 
     public ChunkProviderVoidSurface(World world) {

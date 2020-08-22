@@ -6,9 +6,11 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -27,12 +29,12 @@ public class BlockBarrelGlassColored extends BlockBarrel {
 	public int damageDropped(IBlockState state) {
         return ((EnumDyeColor)state.getValue(COLOR)).getMetadata();
     }
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
         for (EnumDyeColor color : EnumDyeColor.values()) {
-            list.add(new ItemStack(itemIn, 1, color.getMetadata()));
+            items.add(new ItemStack(this));
         }
     }
 	

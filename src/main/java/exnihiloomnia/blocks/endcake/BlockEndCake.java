@@ -15,11 +15,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
 public class BlockEndCake extends BlockCake {
-
     public BlockEndCake() {
         super();
         setCreativeTab(ENOItems.ENO_TAB);
@@ -27,10 +27,10 @@ public class BlockEndCake extends BlockCake {
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        ItemStack heldItem = playerIn.getHeldItem(hand);
 
         if (heldItem != null) {
-
             if (heldItem.getItem() == Items.ENDER_EYE) {
                 int i = state.getValue(BITES);
 
@@ -39,8 +39,7 @@ public class BlockEndCake extends BlockCake {
                     InventoryHelper.consumeItem(playerIn, heldItem);
                 }
             }
-        }
-        else if ((playerIn.canEat(ENOConfig.end_cake_hunger)) || playerIn.capabilities.isCreativeMode) {
+        } else if ((playerIn.canEat(ENOConfig.end_cake_hunger)) || playerIn.capabilities.isCreativeMode) {
             playerIn.getFoodStats().addStats(2, 0.1F);
             int i = state.getValue(BITES);
 
@@ -55,13 +54,13 @@ public class BlockEndCake extends BlockCake {
         return true;
     }
 
-    public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
-    {
+    @NotNull
+    public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
         return new ItemStack(ENOBlocks.END_CAKE);
     }
 
     @Override
-    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return this.getDefaultState().withProperty(BITES, 6);
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        this.getDefaultState().withProperty(BITES, 6);
     }
 }

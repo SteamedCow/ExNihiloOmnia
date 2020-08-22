@@ -103,11 +103,11 @@ public class ENO {
 	@SubscribeEvent
 	public void onWorldTick(TickEvent.WorldTickEvent event) {
 		if (event.side == Side.SERVER && event.phase == TickEvent.Phase.START) {
-			event.world.theProfiler.startSection("exNihiloWorld");
+			event.world.profiler.startSection("exNihiloWorld");
 
 			ENOWorld.tick(event.world);
 
-			event.world.theProfiler.endSection();
+			event.world.profiler.endSection();
 		}
 	}
 

@@ -34,16 +34,16 @@ public class EntityStone extends EntitySnowball {
         }
 
         for (int i = 0; i < 10; ++i) {
-            this.worldObj.spawnParticle(EnumParticleTypes.TOWN_AURA, position.hitVec.xCoord, position.hitVec.yCoord, position.hitVec.zCoord, 0, 0, 0);
+            this.world.spawnParticle(EnumParticleTypes.TOWN_AURA, position.hitVec.x, position.hitVec.y, position.hitVec.z, 0, 0, 0);
         }
 
-        worldObj.playSound(null, this.getPosition(), SoundEvents.BLOCK_STONE_BREAK, SoundCategory.PLAYERS, 0.5F, 1.0F);
+        world.playSound(null, this.getPosition(), SoundEvents.BLOCK_STONE_BREAK, SoundCategory.PLAYERS, 0.5F, 1.0F);
 
-        if (!this.worldObj.isRemote) {
-            if (worldObj.getDifficulty() != EnumDifficulty.PEACEFUL && worldObj.rand.nextInt(20) == 0) {
-                EntitySilverfish fishy = new EntitySilverfish(this.worldObj);
+        if (!this.world.isRemote) {
+            if (world.getDifficulty() != EnumDifficulty.PEACEFUL && world.rand.nextInt(20) == 0) {
+                EntitySilverfish fishy = new EntitySilverfish(this.world);
                 fishy.setLocationAndAngles(posX, posY, posZ, this.rotationYaw, 0);
-                this.worldObj.spawnEntityInWorld(fishy);
+                this.world.spawnEntity(fishy);
             }
 
             this.setDead();

@@ -5,9 +5,9 @@ import exnihiloomnia.blocks.barrels.tileentity.TileEntityBarrel;
 import exnihiloomnia.util.Color;
 import exnihiloomnia.util.helpers.ContentRenderHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -21,9 +21,9 @@ public class BarrelRenderer extends TileEntitySpecialRenderer<TileEntityBarrel> 
 	public static final double MAX_RENDER_CAPACITY = 0.95d;
 
 	@Override
-	public void renderTileEntityAt(TileEntityBarrel barrel, double x, double y, double z, float f, int i) {
+	public void renderTileEntityFast(TileEntityBarrel barrel, double x, double y, double z, float partialTicks, int destroyStage, float partial, BufferBuilder buffer) {
 		BarrelState state = barrel.getState();
-		
+
 		if (state != null) {
 			state.render(barrel, x, y, z);
 		}
@@ -98,7 +98,7 @@ public class BarrelRenderer extends TileEntitySpecialRenderer<TileEntityBarrel> 
 			};
 		
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer renderer = tessellator.getBuffer();
+		BufferBuilder renderer = tessellator.getBuffer();
 		GlStateManager.color(color.r, color.g, color.b, color.a);
 
 		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -113,17 +113,17 @@ public class BarrelRenderer extends TileEntitySpecialRenderer<TileEntityBarrel> 
 		GlStateManager.popMatrix();
 	}
 	
-	private static void renderTexturedQuad(VertexBuffer renderer, TextureAtlasSprite texture, Vec3d[] vertices, double contentHeight) {
+	private static void renderTexturedQuad(BufferBuilder renderer, TextureAtlasSprite texture, Vec3d[] vertices, double contentHeight) {
 		if (texture != null) {
 			double minU = (double) texture.getMinU();
 			double maxU = (double) texture.getMaxU();
 			double minV = (double) texture.getInterpolatedV(texture.getIconHeight() - (texture.getIconHeight() * contentHeight));
 			double maxV = (double) texture.getMaxV();
 
-			renderer.pos(vertices[0].xCoord, vertices[0].yCoord, vertices[0].zCoord).tex(maxU, maxV).endVertex();
-			renderer.pos(vertices[1].xCoord, vertices[1].yCoord, vertices[1].zCoord).tex(maxU, minV).endVertex();
-			renderer.pos(vertices[2].xCoord, vertices[2].yCoord, vertices[2].zCoord).tex(minU, minV).endVertex();
-			renderer.pos(vertices[3].xCoord, vertices[3].yCoord, vertices[3].zCoord).tex(minU, maxV).endVertex();
+			renderer.pos(vertices[0].x, vertices[0].y, vertices[0].z).tex(maxU, maxV).endVertex();
+			renderer.pos(vertices[1].x, vertices[1].y, vertices[1].z).tex(maxU, minV).endVertex();
+			renderer.pos(vertices[2].x, vertices[2].y, vertices[2].z).tex(minU, minV).endVertex();
+			renderer.pos(vertices[3].x, vertices[3].y, vertices[3].z).tex(minU, maxV).endVertex();
 		}
 	}
 	

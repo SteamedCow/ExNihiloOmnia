@@ -14,12 +14,6 @@ public class SieveRecipeHandler implements IRecipeHandler<JEISieveRecipe> {
 
     @Nonnull
     @Override
-    public String getRecipeCategoryUid() {
-        return SieveRecipeCategory.UID;
-    }
-
-    @Nonnull
-    @Override
     public String getRecipeCategoryUid(@Nonnull JEISieveRecipe recipe) {
         return SieveRecipeCategory.UID;
     }

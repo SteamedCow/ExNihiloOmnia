@@ -147,7 +147,7 @@ public class TileEntityBarrel extends BarrelStateLayer implements ITickable {
             ItemStack item = getStackInSlot(slot);
 
             if (item != null && count > 0)  {
-                if (item.stackSize <= count)  {
+                if (item.getMaxStackSize() <= count)  {
                     if (!simulate)
                         setInventorySlotContents(slot, null);
                 }
@@ -187,7 +187,7 @@ public class TileEntityBarrel extends BarrelStateLayer implements ITickable {
     }
 
     public void addOutput(ItemStack item) {
-        if (item != null && item.stackSize > 0) {
+        if (item != null && item.getMaxStackSize() > 0) {
             output.add(item);
         }
     }
@@ -386,14 +386,14 @@ public class TileEntityBarrel extends BarrelStateLayer implements ITickable {
 
         for (int x = 0; x < items.tagCount(); x++) {
             NBTTagCompound item = items.getCompoundTagAt(x);
-            output.add(ItemStack.loadItemStackFromNBT(item));
+            output.add(new ItemStack(item));
         }
 
         NBTTagList content = compound.getTagList("content", Constants.NBT.TAG_COMPOUND);
 
         if (content.tagCount() > 0) {
             NBTTagCompound item = content.getCompoundTagAt(0);
-            contents = ItemStack.loadItemStackFromNBT(item);
+            contents = new ItemStack(item);
         }
 	}
  

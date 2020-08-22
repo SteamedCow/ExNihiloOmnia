@@ -1,9 +1,7 @@
 package exnihiloomnia.client.models;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import exnihiloomnia.ENO;
 import exnihiloomnia.registries.ore.Ore;
 import exnihiloomnia.registries.ore.OreRegistry;
@@ -20,20 +18,18 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.IModelCustomData;
-import net.minecraftforge.client.model.IPerspectiveAwareModel;
+import net.minecraftforge.client.model.PerspectiveMapWrapper;
 import net.minecraftforge.client.model.SimpleModelState;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 import org.apache.commons.lang3.tuple.Pair;
-
+import org.jetbrains.annotations.NotNull;
 import javax.vecmath.Matrix4f;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class ModelOreBlock implements IModel, IModelCustomData {
-
+public class ModelOreBlock implements IModel {
     private static final ModelResourceLocation CUBE = new ModelResourceLocation("block/cube");
     private static final ResourceLocation MISSING = new ResourceLocation(ENO.MODID, "blocks/ore_gravel_base");
     public static final IModel MODEL = new ModelOreBlock();
@@ -56,20 +52,21 @@ public class ModelOreBlock implements IModel, IModelCustomData {
         this.texture = texture;
     }
 
+    @NotNull
     @Override
     public Collection<ResourceLocation> getDependencies() {
         return ImmutableList.of(CUBE);
     }
 
+    @NotNull
     @Override
     public Collection<ResourceLocation> getTextures() {
         return ImmutableList.of(texture);
     }
 
+    @NotNull
     @Override
-    public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-        ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> transformMap = IPerspectiveAwareModel.MapWrapper.getTransforms(state);
-
+    public IBakedModel bake(@NotNull IModelState state, @NotNull VertexFormat format, java.util.function.Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
         TextureAtlasSprite sprite = bakedTextureGetter.apply(texture);
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
 
@@ -79,14 +76,16 @@ public class ModelOreBlock implements IModel, IModelCustomData {
             for (EnumFacing facing : EnumFacing.values())
                 builder.add(new BakedQuadRetextured(model.getQuads(null, facing, 0).get(0), sprite));
         }
-        return new BakedModelOreBlock(this, builder.build(), sprite, format, Maps.immutableEnumMap(transformMap), Maps.newHashMap());
+        return model;
     }
 
+    @NotNull
     @Override
     public IModelState getDefaultState() {
         return TRSRTransformation.identity();
     }
 
+    @NotNull
     @Override
     public IModel process(ImmutableMap<String, String> customData) {
         String oreName = customData.get("ore");
@@ -102,9 +101,7 @@ public class ModelOreBlock implements IModel, IModelCustomData {
         return new ModelOreBlock();
     }
 
-    private static final class BakedModelOreBlock implements IPerspectiveAwareModel
-    {
-
+    private static final class BakedModelOreBlock implements IBakedModel {
         private final ModelOreBlock parent;
         private final Map<String, IBakedModel> cache; // contains all the baked models since they'll never change
         private final ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> transforms;
@@ -124,21 +121,20 @@ public class ModelOreBlock implements IModel, IModelCustomData {
             this.cache = cache;
         }
 
+        @NotNull
         @Override
-        public ItemOverrideList getOverrides()
-        {
+        public ItemOverrideList getOverrides()  {
             return BakedOreBlockOverrideHandler.INSTANCE;
         }
 
         @Override
-        public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType)
-        {
-            return MapWrapper.handlePerspective(this, transforms, cameraTransformType);
+        public Pair<? extends IBakedModel, Matrix4f> handlePerspective(@NotNull ItemCameraTransforms.TransformType cameraTransformType) {
+            return PerspectiveMapWrapper.handlePerspective(this, transforms, cameraTransformType);
         }
 
+        @NotNull
         @Override
-        public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
-        {
+        public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
             if(side == null) return quads;
             return ImmutableList.of();
         }
@@ -146,7 +142,9 @@ public class ModelOreBlock implements IModel, IModelCustomData {
         public boolean isAmbientOcclusion() { return true;  }
         public boolean isGui3d() { return false; }
         public boolean isBuiltInRenderer() { return false; }
+        @NotNull
         public TextureAtlasSprite getParticleTexture() { return particle; }
+        @NotNull
         public ItemCameraTransforms getItemCameraTransforms() { return ItemCameraTransforms.DEFAULT; }
     }
 
@@ -157,10 +155,11 @@ public class ModelOreBlock implements IModel, IModelCustomData {
             super(ImmutableList.of());
         }
 
+        @NotNull
         @Override
-        public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity)
+        public IBakedModel handleItemState(@NotNull IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity)
         {
-            BakedModelOreBlock model = (BakedModelOreBlock)originalModel;
+            BakedModelOreBlock model = (BakedModelOreBlock) originalModel;
 
             Ore ore = OreRegistry.getOre(Block.getBlockFromItem(stack.getItem()));
 

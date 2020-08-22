@@ -19,11 +19,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +38,6 @@ public class BlockInfestedLeaves extends BlockLeaves implements ITileEntityProvi
     public BlockInfestedLeaves() {
         super();
         this.setCreativeTab(ENOItems.ENO_TAB);
-        this.isBlockContainer = true;
         this.setDefaultState(this.blockState.getBaseState().withProperty(DECAYABLE, true).withProperty(CHECK_DECAY, true));
     }
 
@@ -223,8 +224,9 @@ public class BlockInfestedLeaves extends BlockLeaves implements ITileEntityProvi
         worldIn.removeTileEntity(pos);
     }
 
+    @NotNull
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
+    public IBlockState getStateForPlacement(@NotNull World world, @NotNull BlockPos pos, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ, int meta, @NotNull EntityLivingBase placer, EnumHand hand) {
         return this.getDefaultState().withProperty(DECAYABLE, false).withProperty(CHECK_DECAY, false);
     }
 
@@ -242,7 +244,7 @@ public class BlockInfestedLeaves extends BlockLeaves implements ITileEntityProvi
     }
 
     @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+    public boolean shouldSideBeRendered(@NotNull IBlockState blockState, @NotNull IBlockAccess blockAccess, @NotNull BlockPos pos, @NotNull EnumFacing side)
     {
         return !(!Minecraft.getMinecraft().gameSettings.fancyGraphics && blockAccess.getBlockState(pos.offset(side)).getBlock() == this);
     }

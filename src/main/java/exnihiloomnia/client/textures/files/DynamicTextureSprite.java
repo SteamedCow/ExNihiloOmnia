@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.function.Function;
 
 public class DynamicTextureSprite extends TextureAtlasSprite {
 
@@ -81,7 +82,7 @@ public class DynamicTextureSprite extends TextureAtlasSprite {
     }
 
     @Override
-    public boolean load(IResourceManager manager, ResourceLocation location) {
+    public boolean load(IResourceManager manager, ResourceLocation location, Function<ResourceLocation, TextureAtlasSprite> textureGetter) {
         return false;
     }
 }

@@ -17,8 +17,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-public class JEIHammerRecipe implements IRecipeWrapper{
-
+public class JEIHammerRecipe implements IRecipeWrapper {
     private final ArrayList<ItemStack> input = new ArrayList<>();
     private ArrayList<ItemStack> outputs = new ArrayList<>();
     private final HashMap<ItemStack, ArrayList<HammerReward>> rewards = new HashMap<>();
@@ -60,35 +59,10 @@ public class JEIHammerRecipe implements IRecipeWrapper{
         ingredients.setOutputs(ItemStack.class, outputs);
     }
 
-    @Override
-    public List getInputs() {
-        return input;
-    }
-
-    @Override
-    public List getOutputs() {
-        return outputs;
-    }
-
-    @Override
-    public List<FluidStack> getFluidInputs() {
-        return null;
-    }
-
-    @Override
-    public List<FluidStack> getFluidOutputs() {
-        return null;
-    }
-
     @Nullable
     @Override
     public List<String> getTooltipStrings(int mouseX, int mouseY) {
         return null;
-    }
-
-    @Override
-    public void drawAnimations(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight) {
-
     }
 
     @Override

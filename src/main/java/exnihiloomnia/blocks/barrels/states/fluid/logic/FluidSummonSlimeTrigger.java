@@ -57,7 +57,7 @@ public class FluidSummonSlimeTrigger extends BarrelLogic {
 
 						if (player == null) {
 							barrel.addOutput(item.copy());
-							item.stackSize--;
+							item.setCount(item.getCount() - 1);
 						}
 					}
 
@@ -74,11 +74,11 @@ public class FluidSummonSlimeTrigger extends BarrelLogic {
 					ret = new ItemStack(ENOItems.BUCKET_PORCELAIN);
 
 				if (player == null) {
-					item.stackSize--;
+					item.setCount(item.getCount() - 1);
 					barrel.addOutput(ret);
 				}
 				else if (!player.isCreative()) {
-					item.stackSize--;
+					item.setCount(item.getCount() - 1);
 					InventoryHelper.giveItemStackToPlayer(player, ret);
 				}
 

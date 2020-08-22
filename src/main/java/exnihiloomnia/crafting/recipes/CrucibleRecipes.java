@@ -1,14 +1,18 @@
 package exnihiloomnia.crafting.recipes;
 
+import exnihiloomnia.ENO;
 import exnihiloomnia.blocks.ENOBlocks;
 import exnihiloomnia.items.ENOItems;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class CrucibleRecipes {
-	
 	public static void register() {
-		GameRegistry.addRecipe(new ItemStack(ENOBlocks.CRUCIBLE_RAW, 1),
+		ResourceLocation group = new ResourceLocation(ENO.MODID);
+
+		GameRegistry.addShapedRecipe(ENOBlocks.CRUCIBLE_RAW.getRegistryName(), group,
+				new ItemStack(ENOBlocks.CRUCIBLE_RAW, 1),
 				"x x",
 				"x x",
 				"xxx",

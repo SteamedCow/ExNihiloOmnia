@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public abstract class BarrelState {
+public abstract class BarrelState implements IBlockState {
 	private static final String[] EMPTY_STRING_ARRAY = new String[] {};
 	private final ArrayList<BarrelLogic> triggers = new ArrayList<>();
 	
@@ -47,7 +47,7 @@ public abstract class BarrelState {
 		if (item != null) {
 			for (BarrelLogic entry : triggers) {
 				if (entry.canUseItem(barrel, item) && entry.onUseItem(player, hand, barrel, item)) {
-					barrel.getWorld().notifyBlockOfStateChange(barrel.getPos(), barrel.getBlockType());
+					barrel.getWorld().notifyBlockUpdate(barrel.getPos(), barrel.getState(), barrel.getState(), 2);
 
 					InventoryHelper.consumeItem(player, item);
 					return;

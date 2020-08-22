@@ -13,7 +13,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class IC2 {
-
     public static Item SEED_RUBBER;
 
     public static void registerItems() {

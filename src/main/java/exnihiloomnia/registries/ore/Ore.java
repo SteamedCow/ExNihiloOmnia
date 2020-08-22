@@ -8,6 +8,7 @@ import exnihiloomnia.util.enums.EnumOreBlockType;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -69,13 +70,12 @@ public class Ore {
 
         for (EnumOreBlockType type : EnumOreBlockType.values()) {
             if (hasType(type) && type.getCrafting() != null) {
-                ItemStack in = new ItemStack(type.getCrafting(), 1, this.meta);
+                EnumOreBlockType outType = EnumOreBlockType.fromMetadata(this.meta);
+                Item in = type.getCrafting();
+                Ingredient ingredient = Ingredient.fromItem(in);
 
-                GameRegistry.addShapelessRecipe(new ItemStack(oreBlock, 1, type.ordinal()),
-                         in,
-                         in,
-                         in,
-                         in);
+                GameRegistry.addShapelessRecipe(outType.getLocation(), outType.getLocation(), new ItemStack(oreBlock, 1, type.ordinal()),
+                        ingredient, ingredient, ingredient, ingredient);
             }
         }
     }

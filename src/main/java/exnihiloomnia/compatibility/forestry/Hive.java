@@ -8,9 +8,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Hive {
     public int defaultSpawnBonus = 0;
@@ -52,7 +52,7 @@ public class Hive {
         }
 
         if (!biomeTypes.isEmpty() && ENOCompatibility.biome_required) {
-            Type[] types = BiomeDictionary.getTypesForBiome(biome);
+            Set<Type> types = BiomeDictionary.getTypes(biome);
 
 
             for (Type type : biomeTypes) {
@@ -121,7 +121,7 @@ public class Hive {
         }
 
         if (!biomeTypes.isEmpty()) {
-            Type[] types = BiomeDictionary.getTypesForBiome(biome);
+            Set<Type> types = BiomeDictionary.getTypes(biome);
             boolean found = false;
 
             for (Type type : biomeTypes) {

@@ -5,6 +5,7 @@ import exnihiloomnia.util.Color;
 import exnihiloomnia.util.helpers.ContentRenderHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
@@ -20,9 +21,9 @@ public class SieveRenderer extends TileEntitySpecialRenderer<TileEntitySieve> {
 	public static final double MIN_RENDER_CAPACITY = (double) 18/32;
 	public static final double MAX_RENDER_CAPACITY = (double) 31/32;
 	private static EntityLivingBase entity;
-	
+
 	@Override
-	public void renderTileEntityAt(TileEntitySieve sieve, double x, double y, double z, float f, int i) {
+	public void renderTileEntityFast(TileEntitySieve sieve, double x, double y, double z, float partialTicks, int destroyStage, float partial, BufferBuilder buffer) {
 		GlStateManager.pushMatrix();
 		RenderHelper.disableStandardItemLighting();
 

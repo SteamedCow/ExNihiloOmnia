@@ -29,7 +29,7 @@ public class CrookedToolEventHandler {
                 ITrait trait = TinkerRegistry.getTrait(tagList.getStringTagAt(i));
 
                 if(trait instanceof ModCrooked) {
-                    if (!player.worldObj.isRemote) {
+                    if (!player.world.isRemote) {
                         double distance = Math.sqrt(Math.pow(player.posX - entity.posX, 2) + Math.pow(player.posZ - entity.posZ, 2));
 
                         double scalarX = (player.posX - entity.posX) / distance;

@@ -9,6 +9,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -27,12 +28,12 @@ public class BlockBarrelWood extends BlockBarrel {
 	public int damageDropped(IBlockState state) {
         return ((EnumWood)state.getValue(WOOD)).getMetadata();
     }
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
         for (EnumWood wood : EnumWood.values()) {
-            list.add(new ItemStack(itemIn, 1, wood.getMetadata()));
+            items.add(new ItemStack(this));
         }
     }
 	

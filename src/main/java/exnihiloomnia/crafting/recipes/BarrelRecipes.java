@@ -1,16 +1,20 @@
 package exnihiloomnia.crafting.recipes;
 
+import exnihiloomnia.ENO;
 import exnihiloomnia.blocks.ENOBlocks;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BarrelRecipes {
-	
 	public static void register() {
+		ResourceLocation group = new ResourceLocation(ENO.MODID);
+
 		//wood barrels
 		for(int i = 0; i < 6; i++) {
-			GameRegistry.addRecipe(new ItemStack(ENOBlocks.BARREL_WOOD, 1, i),
+			GameRegistry.addShapedRecipe(ENOBlocks.BARREL_WOOD.getRegistryName(), group,
+					new ItemStack(ENOBlocks.BARREL_WOOD, 1, i),
 					"x x",
 					"x x",
 					"xyx",
@@ -19,7 +23,8 @@ public class BarrelRecipes {
 		}
 
 		//stone barrel
-		GameRegistry.addRecipe(new ItemStack(ENOBlocks.BARREL_STONE, 1, 0),
+		GameRegistry.addShapedRecipe(ENOBlocks.BARREL_STONE.getRegistryName(), group,
+				new ItemStack(ENOBlocks.BARREL_STONE, 1, 0),
 				"x x",
 				"x x",
 				"xyx",
@@ -27,7 +32,8 @@ public class BarrelRecipes {
 				'y', new ItemStack(Blocks.STONE_SLAB, 1, 0));
 
 		//glass barrel
-		GameRegistry.addRecipe(new ItemStack(ENOBlocks.BARREL_GLASS, 1, 0),
+		GameRegistry.addShapedRecipe(ENOBlocks.BARREL_GLASS.getRegistryName(), group,
+				new ItemStack(ENOBlocks.BARREL_GLASS, 1, 0),
 				"x x",
 				"x x",
 				"xyx",
@@ -36,7 +42,8 @@ public class BarrelRecipes {
 
 		//stained glass barrels
 		for(int i = 0; i < 16; i++) {
-			GameRegistry.addRecipe(new ItemStack(ENOBlocks.BARREL_GLASS_COLORED, 1, i),
+			GameRegistry.addShapedRecipe(ENOBlocks.BARREL_GLASS_COLORED.getRegistryName(), group,
+					new ItemStack(ENOBlocks.BARREL_GLASS_COLORED, 1, i),
 					"x x",
 					"x x",
 					"xyx",

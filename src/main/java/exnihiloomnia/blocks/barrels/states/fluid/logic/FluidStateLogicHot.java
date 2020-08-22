@@ -3,6 +3,7 @@ package exnihiloomnia.blocks.barrels.states.fluid.logic;
 import exnihiloomnia.blocks.barrels.architecture.BarrelLogic;
 import exnihiloomnia.blocks.barrels.tileentity.TileEntityBarrel;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
@@ -46,10 +47,11 @@ public class FluidStateLogicHot extends BarrelLogic {
 							}
 						}
 						else {
-							Block fblock = barrel.getFluid().getFluid().getBlock();
+							Block fBlock = barrel.getFluid().getFluid().getBlock();
+							IBlockState state = fBlock.getBlockState().getBaseState();
 							
-							world.setBlockState(barrel.getPos(), fblock.getDefaultState(), 3);
-							world.notifyBlockOfStateChange(barrel.getPos(), fblock);
+							world.setBlockState(barrel.getPos(), fBlock.getDefaultState(), 3);
+							world.notifyBlockUpdate(barrel.getPos(), state, state, 2);
 							
 							return true;
 						}

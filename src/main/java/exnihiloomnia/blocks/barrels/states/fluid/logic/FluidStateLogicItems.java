@@ -7,10 +7,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 
 public class FluidStateLogicItems extends BarrelLogic {
 	private static final ResourceLocation wateringCan = new ResourceLocation("extrautils2", "WateringCan");
@@ -18,20 +18,22 @@ public class FluidStateLogicItems extends BarrelLogic {
 	@Override
 	public boolean canUseItem(TileEntityBarrel barrel, ItemStack item) {
 		FluidStack fluid = barrel.getFluid();
-		FluidStack ifluid = FluidContainerRegistry.getFluidForFilledItem(item);
-		ItemStack full = FluidContainerRegistry.fillFluidContainer(fluid, item);
+		FluidBucketWrapper fluidWrapper = new FluidBucketWrapper(item);
+		FluidStack iFluid = fluidWrapper.getFluid();
+		boolean canFill = fluidWrapper.canFillFluidType(fluid);
 
 		return item.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)
 				|| (fluid != null
-				&& (ifluid != null && barrel.getFluidTank().fill(ifluid, false) > 0
-				|| full != null && fluid.amount >= barrel.getFluidTank().getCapacity()))
+				&& (iFluid != null && barrel.getFluidTank().fill(iFluid, false) > 0
+				|| canFill && fluid.amount >= barrel.getFluidTank().getCapacity()))
 				|| item.getItem().getRegistryName().equals(wateringCan);
 	}
 
 	@Override
 	public boolean onUseItem(EntityPlayer player, EnumHand hand, TileEntityBarrel barrel, ItemStack item) {
 		FluidStack fluid = barrel.getFluid();
-		FluidStack ifluid = FluidContainerRegistry.getFluidForFilledItem(item);
+		FluidBucketWrapper fluidWrapper = new FluidBucketWrapper(item);
+		FluidStack iFluid = fluidWrapper.getFluid();
 
 		if (fluid != null ) {
 			//watering can!
@@ -44,16 +46,16 @@ public class FluidStateLogicItems extends BarrelLogic {
 			}
 
 			if (item.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-				FluidUtil.interactWithFluidHandler(item, barrel.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), player);
-			}
-			else if (FluidContainerRegistry.isEmptyContainer(item) && fluid.amount >= barrel.getFluidTank().getCapacity()) {
-				ItemStack full = FluidContainerRegistry.fillFluidContainer(fluid, item);
+				FluidUtil.interactWithFluidHandler(player, hand, barrel.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null));
+			} else if (fluidWrapper.getContainer().isEmpty() && fluid.amount >= barrel.getFluidTank().getCapacity()) {
+				ItemStack full = fluidWrapper.getContainer();
 
 				if (full != null) {
 					if (player != null) {
 						if (!player.capabilities.isCreativeMode) {
-							if (item.stackSize > 1) {
-								item.stackSize--;
+							int stackSize = item.getCount();
+							if (stackSize > 1) {
+								item.setCount(stackSize - 1);
 								InventoryHelper.giveItemStackToPlayer(player, full);
 							}
 							else
@@ -69,17 +71,17 @@ public class FluidStateLogicItems extends BarrelLogic {
 					barrel.getFluidTank().drain(barrel.getFluidTank().getCapacity(), true);
 				}
 			}
-			else if (ifluid != null && barrel.getFluidTank().fill(ifluid, false) > 0) {
+			else if (iFluid != null && barrel.getFluidTank().fill(iFluid, false) > 0) {
 				if (player != null) {
-					if (!player.capabilities.isCreativeMode)
-						item.setItem(InventoryHelper.getContainer(item).getItem());
-				}
-				else {
+//					if (!player.capabilities.isCreativeMode) {
+//						item.setItem(InventoryHelper.getContainer(item).getItem());
+//					}
+				} else {
 					InventoryHelper.consumeItem(null, item);
 					barrel.addOutput(InventoryHelper.getContainer(item));
 				}
 				
-				barrel.getFluidTank().fill(ifluid, true);
+				barrel.getFluidTank().fill(iFluid, true);
 			}
 		}
 		

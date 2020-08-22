@@ -7,13 +7,14 @@ import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.translation.I18n;
@@ -22,6 +23,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.ItemFluidContainer;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -29,12 +33,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import java.util.List;
-
 @SuppressWarnings("deprecation")
-public class UniversalPorcelainBucket extends Item implements IFluidContainerItem {
+public class UniversalPorcelainBucket extends ItemFluidContainer {
 
-    private final int capacity; // how much the bucket holds
+//    private final int capacity; // how much the bucket holds
     private final ItemStack empty; // empty item to return and recognize when filling
     private final boolean nbtSensitive;
 
@@ -48,7 +50,8 @@ public class UniversalPorcelainBucket extends Item implements IFluidContainerIte
      * @param nbtSensitive    Whether the empty item is NBT sensitive (usually true if empty and full are the same items)
      */
     public UniversalPorcelainBucket(int capacity, ItemStack empty, boolean nbtSensitive) {
-        this.capacity = capacity;
+        super(capacity);
+//        this.capacity = capacity;
         this.empty = empty;
         this.nbtSensitive = nbtSensitive;
 
@@ -84,7 +87,7 @@ public class UniversalPorcelainBucket extends Item implements IFluidContainerIte
      */
     @SideOnly(Side.CLIENT)
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+        public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
 
             if (fluid != FluidRegistry.WATER && fluid != FluidRegistry.LAVA && fluid != ENOFluids.WITCHWATER && !fluid.getName().equals("milk")) {
@@ -116,7 +119,8 @@ public class UniversalPorcelainBucket extends Item implements IFluidContainerIte
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        ItemStack itemstack = player.getHeldItem(hand);
         FluidStack fluidStack = getFluid(itemstack);
         // empty bucket shouldn't exist, do nothing since it should be handled by the bucket event
         if (fluidStack == null)
@@ -137,16 +141,16 @@ public class UniversalPorcelainBucket extends Item implements IFluidContainerIte
             // can the player place there?
             if (player.canPlayerEdit(targetPos, mop.sideHit, itemstack)) {
                 // try placing liquid
-                if (FluidUtil.tryPlaceFluid(player, player.getEntityWorld(), fluidStack, targetPos)
+                if (FluidUtil.tryPlaceFluid(player, player.getEntityWorld(), targetPos, itemstack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), fluidStack)
                         && !player.capabilities.isCreativeMode) {
                     // success!
                     player.addStat(StatList.getObjectUseStats(this));
 
-                    itemstack.stackSize--;
+                    itemstack.setCount(itemstack.getCount() - 1);
                     ItemStack emptyStack = getEmpty() != null ? getEmpty().copy() : new ItemStack(this);
 
                     // check whether we replace the item or add the empty one to the inventory
-                    if (itemstack.stackSize <= 0)
+                    if (itemstack.getCount() <= 0)
                         return ActionResult.newResult(EnumActionResult.SUCCESS, emptyStack);
                     else {
                         // add empty bucket to player inventory
@@ -164,14 +168,18 @@ public class UniversalPorcelainBucket extends Item implements IFluidContainerIte
     // compatibility
     @Deprecated
     public boolean tryPlaceFluid(Block block, World worldIn, BlockPos pos) {
+        TileEntity tileEntity = worldIn.getTileEntity(pos);
+        IFluidHandler fluidSource = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+
         if (block instanceof IFluidBlock) {
             IFluidBlock fluidBlock = (IFluidBlock) block;
-            return FluidUtil.tryPlaceFluid(null, worldIn, new FluidStack(fluidBlock.getFluid(), Fluid.BUCKET_VOLUME), pos);
+
+            return FluidUtil.tryPlaceFluid(null, worldIn, pos, fluidSource, new FluidStack(fluidBlock.getFluid(), Fluid.BUCKET_VOLUME));
         }
         else if (block.getDefaultState().getMaterial() == Material.WATER)
-            FluidUtil.tryPlaceFluid(null, worldIn, new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME), pos);
+            FluidUtil.tryPlaceFluid(null, worldIn, pos, fluidSource, new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME));
         else if (block.getDefaultState().getMaterial() == Material.LAVA)
-            FluidUtil.tryPlaceFluid(null, worldIn, new FluidStack(FluidRegistry.LAVA, Fluid.BUCKET_VOLUME), pos);
+            FluidUtil.tryPlaceFluid(null, worldIn, pos, fluidSource, new FluidStack(FluidRegistry.LAVA, Fluid.BUCKET_VOLUME));
 
         return false;
     }
@@ -196,9 +204,10 @@ public class UniversalPorcelainBucket extends Item implements IFluidContainerIte
         BlockPos pos = target.getBlockPos();
 
         ItemStack singleBucket = emptyBucket.copy();
-        singleBucket.stackSize = 1;
+        singleBucket.setCount(1);
 
-        ItemStack filledBucket = FluidUtil.tryPickUpFluid(singleBucket, event.getEntityPlayer(), world, pos, target.sideHit);
+        FluidActionResult actionResult = FluidUtil.tryPickUpFluid(singleBucket, event.getEntityPlayer(), world, pos, target.sideHit);
+        ItemStack filledBucket = actionResult.result;
         if (filledBucket != null) {
             event.setResult(Event.Result.ALLOW);
             event.setFilledBucket(filledBucket);
@@ -215,23 +224,17 @@ public class UniversalPorcelainBucket extends Item implements IFluidContainerIte
     }
 
   /* FluidContainer Management */
-
-    @Override
     public FluidStack getFluid(ItemStack container) {
         return FluidStack.loadFluidStackFromNBT(container.getTagCompound());
     }
 
-    @Override
-    public int getCapacity(ItemStack container)
-    {
+    public int getCapacity(ItemStack container) {
         return getCapacity();
     }
 
-    @Override
-    public int fill(ItemStack container, FluidStack resource, boolean doFill)
-    {
+    public int fill(ItemStack container, FluidStack resource, boolean doFill) {
         // has to be exactly 1, must be handled from the caller
-        if (container.stackSize != 1)
+        if (container.getCount() != 1)
             return 0;
 
         // can only fill exact capacity
@@ -275,10 +278,9 @@ public class UniversalPorcelainBucket extends Item implements IFluidContainerIte
         return 0;
     }
 
-    @Override
     public FluidStack drain(ItemStack container, int maxDrain, boolean doDrain) {
         // has to be exactly 1, must be handled from the caller
-        if (container.stackSize != 1)
+        if (container.getCount() != 1)
             return null;
 
         // can only drain everything at once
@@ -291,7 +293,7 @@ public class UniversalPorcelainBucket extends Item implements IFluidContainerIte
             if(getEmpty() != null)
                 container.deserializeNBT(getEmpty().serializeNBT());
             else
-                container.stackSize = 0;
+                container.setCount(0);
         }
 
         return fluidStack;

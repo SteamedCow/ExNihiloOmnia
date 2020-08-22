@@ -35,7 +35,7 @@ public class BlazeStateLogic extends BarrelLogic {
 				EntityBlaze blaze = new EntityBlaze(barrel.getWorld());
 				blaze.setPositionAndRotation(barrel.getPos().getX() + 0.5d, barrel.getPos().getY() + 1.25d, barrel.getPos().getZ() + 0.5d, barrel.getWorld().rand.nextFloat() * 360f, 0.0f);
 
-				barrel.getWorld().spawnEntityInWorld(blaze);
+				barrel.getWorld().spawnEntity(blaze);
 			}
 			
 			barrel.setState(BarrelStates.EMPTY);

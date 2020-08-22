@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -16,9 +16,10 @@ public class InventoryHelper {
 		
 		if (full.getItem().hasContainerItem(full)) {
 			empty = full.getItem().getContainerItem(full);
-		} 
-		else {
-			empty = FluidContainerRegistry.drainFluidContainer(full);
+		} else {
+			FluidBucketWrapper fluidWrapper = new FluidBucketWrapper(full);
+			fluidWrapper.drain(fluidWrapper.getFluid(), true);
+			empty = fluidWrapper.getContainer();
 		}
 		
 		return empty;
@@ -35,7 +36,7 @@ public class InventoryHelper {
 	}
 	
 	public static void giveItemStackToPlayer(EntityPlayer player, ItemStack item) {
-		if(!player.worldObj.isRemote) {
+		if(!player.world.isRemote) {
 			if (!player.inventory.addItemStackToInventory(item)) {
                 player.dropItem(item, false);
 			}
@@ -44,9 +45,8 @@ public class InventoryHelper {
 
 	public static void consumeItem(@Nullable EntityPlayer player, @Nonnull ItemStack item) {
 		if (player == null || !player.capabilities.isCreativeMode) {
-			--item.stackSize;
-			if (item.stackSize < 0)
-				item.stackSize = 0;
+			int newStackSize = item.getCount() - 1;
+			item.setCount(Math.max(newStackSize, 0));
 		}
 	}
 }

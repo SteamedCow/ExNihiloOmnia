@@ -66,18 +66,18 @@ public class TileEntitySieve extends TileEntity implements ITickable {
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             ItemStack copy = stack.copy();
-            copy.stackSize = 1;
+            copy.setCount(1);
 
             if (isItemValidForSlot(slot, copy)) {
 
 				if (slot == 0 && hasMesh()) {
                     setContents(copy);
-                    return new ItemStack(stack.getItem(), stack.stackSize - 1);
+                    return new ItemStack(stack.getItem(), stack.getCount() - 1);
                 }
 
 				if (slot == 1) {
                     setMesh(copy);
-                    return new ItemStack(stack.getItem(), stack.stackSize - 1);
+                    return new ItemStack(stack.getItem(), stack.getCount() - 1);
                 }
             }
 			return stack;
@@ -141,7 +141,7 @@ public class TileEntitySieve extends TileEntity implements ITickable {
 						InventoryHelper.dropItemInWorld(getWorld(), pos, 1, i);
 
 						for (int j = 0; j < getWorld().rand.nextInt(2); j++)
-							getWorld().spawnEntityInWorld(new EntityXPOrb(getWorld(), pos.getX() + .5, pos.getY() + 1, pos.getZ() + .5, 1));
+							getWorld().spawnEntity(new EntityXPOrb(getWorld(), pos.getX() + .5, pos.getY() + 1, pos.getZ() + .5, 1));
 					}
 				}
 
@@ -151,7 +151,7 @@ public class TileEntitySieve extends TileEntity implements ITickable {
 				contents = null;
 
 				if (this.mesh != null) {
-					if (mesh.attemptDamageItem(1, getWorld().rand)) {
+					if (mesh.attemptDamageItem(1, getWorld().rand, null)) {
 						getWorld().playSound(null, pos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 0.5f, 2.5f);
 						setMesh(null);
 					}
@@ -166,10 +166,10 @@ public class TileEntitySieve extends TileEntity implements ITickable {
 
 							i.damageItem(1, player);
 
-							if (i.stackSize <= 0) {
+							if (i.getCount() <= 0) {
 								player.renderBrokenItemStack(i);
-								if (i.equals(player.inventory.offHandInventory[0]))
-									player.inventory.offHandInventory[0] = null;
+								if (i.equals(player.inventory.offHandInventory.get(0)))
+									player.inventory.offHandInventory.set(0, ItemStack.EMPTY);
 							}
 						}
 					}
@@ -319,10 +319,10 @@ public class TileEntitySieve extends TileEntity implements ITickable {
 		NBTTagList items = compound.getTagList("items", Constants.NBT.TAG_COMPOUND);
 		
 		NBTTagCompound meshTag = items.getCompoundTagAt(0);
-		setMesh(ItemStack.loadItemStackFromNBT(meshTag));
+		setMesh(new ItemStack(meshTag));
 		
 		NBTTagCompound contentsTag = items.getCompoundTagAt(1);
-		setContents(ItemStack.loadItemStackFromNBT(contentsTag));
+		setContents(new ItemStack(contentsTag));
 	}
 
 	@Override

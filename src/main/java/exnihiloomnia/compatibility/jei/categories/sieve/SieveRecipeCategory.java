@@ -23,7 +23,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class SieveRecipeCategory implements IRecipeCategory<JEISieveRecipe> {
-
     public static final String UID = "exnihiloomnia:sieve";
     private static final ResourceLocation texture = new ResourceLocation(ENO.MODID, "textures/gui/jei_sieve.png");
 
@@ -134,7 +133,6 @@ public class SieveRecipeCategory implements IRecipeCategory<JEISieveRecipe> {
 
     @Override
     public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull final JEISieveRecipe recipeWrapper) {
-
         recipeLayout.getItemStacks().init(0, true, 74, 9);
         recipeLayout.getItemStacks().set(0, (ItemStack) recipeWrapper.getInputs().get(0));
 

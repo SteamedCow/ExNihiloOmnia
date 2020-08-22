@@ -7,15 +7,12 @@ import exnihiloomnia.registries.crucible.CrucibleRegistry;
 import exnihiloomnia.registries.crucible.HeatRegistry;
 import exnihiloomnia.registries.hammering.HammerRegistry;
 import exnihiloomnia.registries.sifting.SieveRegistry;
-import mezz.jei.JustEnoughItems;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.Loader;
-
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,28 +26,27 @@ public class CommandRegistry extends CommandBase {
     }
 
     @Override
-    public String getCommandName() {
-        return "exnihiloregistry";
-    }
-
-    @Override
-    public List<String> getCommandAliases() {
-        return aliases;
-    }
-
-    @Override
-    public String getCommandUsage(ICommandSender sender) {
-        return ENO.MODID + ".commands.registry.usage";
-    }
-
-    @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
         if (args.length == 1)
             return  getListOfStringsMatchingLastWord(args, "reload", "clear", "load");
         else if (args.length == 2)
             return getListOfStringsMatchingLastWord(args, "heat", "crucible", "sieve", "hammer", "compost", "crook");
         else
             return Collections.emptyList();
+    }
+
+    public List<String> getAliases() {
+        return aliases;
+    }
+
+    @Override
+    public String getName() {
+        return "exnihiloregistry";
+    }
+
+    @Override
+    public String getUsage(ICommandSender sender) {
+        return ENO.MODID + ".commands.registry.usage";
     }
 
     @Override
@@ -94,9 +90,6 @@ public class CommandRegistry extends CommandBase {
             }
             else
                 throw new WrongUsageException(ENO.MODID + ".commands.registry.usage", 0);
-
-            if (Loader.isModLoaded("JEI"))
-                JustEnoughItems.getProxy().restartJEI();
         }
     }
 

@@ -6,6 +6,7 @@ import exnihiloomnia.blocks.barrels.tileentity.TileEntityBarrel;
 import exnihiloomnia.items.crooks.ItemCrook;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -37,10 +38,10 @@ public class SlimeStateLogic extends BarrelLogic {
             
 		    if (player != null) {
                 if (!player.isCreative())
-                    item.attemptDamageItem(1, barrel.getWorld().rand);
-            }
-            else
-                item.attemptDamageItem(1, barrel.getWorld().rand);
+                    item.attemptDamageItem(1, barrel.getWorld().rand, player instanceof EntityPlayerMP ? (EntityPlayerMP) player : null);
+            }  else {
+		    	item.attemptDamageItem(1, barrel.getWorld().rand, null);
+			}
 		    
 			if (!barrel.getWorld().isRemote) {
 				BlockPos pos = barrel.getPos();
@@ -48,7 +49,7 @@ public class SlimeStateLogic extends BarrelLogic {
 				slime.setPositionAndRotation(pos.getX() + .5f, pos.getY() + 1f, pos.getZ() + .5f, 0, barrel.getWorld().rand.nextInt(360));
                 slime.setHealth(1);
 
-				barrel.getWorld().spawnEntityInWorld(slime);
+				barrel.getWorld().spawnEntity(slime);
 			}
 
 			barrel.setState(BarrelStates.EMPTY);

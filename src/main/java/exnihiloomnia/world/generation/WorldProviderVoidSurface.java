@@ -8,7 +8,7 @@ import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeProviderSingle;
-import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.IChunkGenerator;
 
 public class WorldProviderVoidSurface extends WorldProviderSurface {
 	
@@ -19,7 +19,7 @@ public class WorldProviderVoidSurface extends WorldProviderSurface {
 
 	@Override
     public IChunkGenerator createChunkGenerator() {
-        return new ChunkProviderVoidSurface(worldObj);
+        return new ChunkProviderVoidSurface(world);
     }
 
     @Override

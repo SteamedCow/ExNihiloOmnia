@@ -24,17 +24,22 @@ import exnihiloomnia.items.itemblocks.ItemBarrelGlassColored;
 import exnihiloomnia.items.itemblocks.ItemBarrelWood;
 import exnihiloomnia.items.itemblocks.ItemInfestedLeaves;
 import exnihiloomnia.items.itemblocks.ItemSieveWood;
+import kotlin.jvm.JvmStatic;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ENOBlocks {	
-	public static Block BARREL_WOOD;
+@Mod.EventBusSubscriber(modid = ENO.MODID)
+public class ENOBlocks {
+	public static Block BARREL_WOOD = new BlockBarrelWood().setUnlocalizedName("barrel_wood").setRegistryName("barrel_wood");
 	public static Block BARREL_STONE;
 	public static Block BARREL_GLASS;
 	public static Block BARREL_GLASS_COLORED;
@@ -95,24 +100,17 @@ public class ENOBlocks {
         END_CAKE = new BlockEndCake().setUnlocalizedName("end_cake").setRegistryName("end_cake");
         CHORUS_SPROUT = new BlockChorusSapling().setUnlocalizedName("chorus_sprout").setRegistryName("chorus_sprout");
 
-        for (Block block : getBlocks()) {
-            GameRegistry.register(block);
-            
-            if (block == BARREL_WOOD)
-                GameRegistry.register(new ItemBarrelWood(block).setRegistryName(block.getRegistryName()));
-            else if (block == BARREL_GLASS_COLORED)
-                GameRegistry.register(new ItemBarrelGlassColored(block).setRegistryName(block.getRegistryName()));
-            else if (block == SIEVE_WOOD)
-                GameRegistry.register(new ItemSieveWood(block).setRegistryName(block.getRegistryName()));
-            else if (block == INFESTED_LEAVES)
-                GameRegistry.register(new ItemInfestedLeaves(block).setRegistryName(block.getRegistryName()));
-            else if (block != WITCHWATER && block != CHORUS_SPROUT)
-                GameRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
-        }
-
 		GameRegistry.registerTileEntity(TileEntityBarrel.class, ENO.MODID + ":tile_entity_barrel");
 		GameRegistry.registerTileEntity(TileEntitySieve.class, ENO.MODID + ":tile_entity_sieve");
 		GameRegistry.registerTileEntity(TileEntityCrucible.class, ENO.MODID + ":tile_entity_crucible");
 		GameRegistry.registerTileEntity(TileEntityInfestedLeaves.class, ENO.MODID + ":tile_entity_infested_leaves");
 	}
+
+    @SubscribeEvent
+    @JvmStatic
+    public static void registerBlocks(RegistryEvent.Register<Block> event) {
+        for (Block block : getBlocks()) {
+            event.getRegistry().register(block);
+        }
+    }
 }
