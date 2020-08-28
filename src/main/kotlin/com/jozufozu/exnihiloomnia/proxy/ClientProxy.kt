@@ -61,15 +61,15 @@ class ClientProxy : CommonProxy() {
             if (item is IModelRegister)
                 (item as IModelRegister).registerModels()
 
-        ModelBakery.registerItemVariants(ItemBlock(ExNihiloBlocks.WITCHWATER))
-
-        ModelLoader.setCustomStateMapper(ExNihiloBlocks.WITCHWATER, object : StateMapperBase() {
-            override fun getModelResourceLocation(state: IBlockState): ModelResourceLocation {
-                return WITCHWATER_MODEL_LOCATION
-            }
-        })
-
-        ModelLoader.setCustomMeshDefinition(ItemBlock(ExNihiloBlocks.WITCHWATER)) { WITCHWATER_MODEL_LOCATION }
+//        ModelBakery.registerItemVariants(ItemBlock(ExNihiloBlocks.WITCHWATER))
+//
+//        ModelLoader.setCustomStateMapper(ExNihiloBlocks.WITCHWATER, object : StateMapperBase() {
+//            override fun getModelResourceLocation(state: IBlockState): ModelResourceLocation {
+//                return WITCHWATER_MODEL_LOCATION
+//            }
+//        })
+//
+//        ModelLoader.setCustomMeshDefinition(ItemBlock(ExNihiloBlocks.WITCHWATER)) { WITCHWATER_MODEL_LOCATION }
     }
 
     companion object {
